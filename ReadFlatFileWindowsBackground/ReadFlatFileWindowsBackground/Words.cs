@@ -52,9 +52,9 @@ namespace WindowsFormsApplication1
 
 
                 int length = (int)fs.Length;  // get file length
-                //b = new byte[length];            // create buffer
-                int count = 0;                            // actual number of bytes read
-                int sum = 0;                          // total number of bytes read
+                //b = new byte[length];       // create buffer
+                int count = 0;                // actual number of bytes read
+                int sum = 0;                  // total number of bytes read
 
                 //Read File upper
                 //int max = (int)(fs.Length / 2);
@@ -73,7 +73,7 @@ namespace WindowsFormsApplication1
                     //else
                     //{
                     line = temp.GetString(b);
-                    WordCount += CountInString(line, CompareString);
+                    WordCount += StringHelper.Instance.CountInString(line, CompareString);
                     LinesCounted += 1;
 
                     // Raise an event so the form can monitor progress.
@@ -100,29 +100,6 @@ namespace WindowsFormsApplication1
         }
 
 
-        private int CountInString(
-            string SourceString,
-            string CompareString)
-        {
-            // This function counts the number of times
-            // a word is found in a line.
-            if (SourceString == null)
-            {
-                return 0;
-            }
-
-            string EscapedCompareString =
-                System.Text.RegularExpressions.Regex.Escape(CompareString);
-
-            System.Text.RegularExpressions.Regex regex;
-            regex = new System.Text.RegularExpressions.Regex(
-                EscapedCompareString,
-                System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-
-            System.Text.RegularExpressions.MatchCollection matches;
-            matches = regex.Matches(SourceString);
-            return matches.Count;
-        }
 
     }
 }

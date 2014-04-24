@@ -41,6 +41,8 @@
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
             this.SuspendLayout();
             // 
             // Start
@@ -69,7 +71,7 @@
             this.SourceFile.Name = "SourceFile";
             this.SourceFile.Size = new System.Drawing.Size(100, 20);
             this.SourceFile.TabIndex = 2;
-            this.SourceFile.Text = "D:\\visual studio 2010\\Projects\\ReadFile\\TextFile\\testbig.txt";
+            this.SourceFile.Text = "G:\\testbig.txt";
             // 
             // CompareString
             // 
@@ -158,11 +160,30 @@
             this.label6.TabIndex = 11;
             this.label6.Text = "label6";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(12, 220);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 12;
+            this.button1.Text = "Start MMF";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.MMF_Click);
+            // 
+            // backgroundWorker2
+            // 
+            this.backgroundWorker2.WorkerReportsProgress = true;
+            this.backgroundWorker2.WorkerSupportsCancellation = true;
+            this.backgroundWorker2.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker2_DoWork);
+            this.backgroundWorker2.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker2_ProgressChanged);
+            this.backgroundWorker2.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker2_RunWorkerCompleted);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(292, 266);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -197,6 +218,8 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button button1;
+        private System.ComponentModel.BackgroundWorker backgroundWorker2;
     }
 }
 

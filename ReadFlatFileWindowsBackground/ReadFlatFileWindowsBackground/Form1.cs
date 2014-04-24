@@ -17,6 +17,64 @@ namespace WindowsFormsApplication1
             InitializeComponent();
         }
 
+
+        private void Start_Click(object sender, EventArgs e)
+        {
+            label5.Text = "Debut: " + DateTime.Now;
+            StartThread();
+        }
+
+        private void StartThread()
+        {
+            // This method runs on the main thread.
+            this.WordsCounted.Text = "0";
+
+            // Initialize the object that the background worker calls.
+            Words WC = new Words();
+            WC.CompareString = this.CompareString.Text;
+            WC.SourceFile = this.SourceFile.Text;
+            WC.FileSplitPart = 3;
+
+            //System.ComponentModel.BackgroundWorker worker;
+
+            //Thread newThread = new Thread(WC.CountWords);
+            //newThread.IsBackground = true;
+            //newThread.Start();
+
+            //ThreadTest t = new ThreadTest();
+            //newThread = new Thread(t.moreThreadJob);
+
+            //newThread.Start();
+
+            // Start the asynchronous operation.
+            //WC.FilePart = 1;
+            backgroundWorker1.RunWorkerAsync(WC);
+            //WC.FilePart = 2;
+            //backgroundWorker1.RunWorkerAsync(WC);
+            //WC.FilePart = 3;
+            //backgroundWorker1.RunWorkerAsync(WC);
+        }
+        private void Cancel_Click(object sender, EventArgs e)
+        {
+            // Cancel the asynchronous operation.
+            this.backgroundWorker1.CancelAsync();
+        }
+
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            // This event handler is where the actual work is done.
+            // This method runs on the background thread.
+
+            // Get the BackgroundWorker object that raised this event.
+            System.ComponentModel.BackgroundWorker worker;
+            worker = (System.ComponentModel.BackgroundWorker)sender;
+
+            // Get the Words object and call the main method.
+            Words WC = (Words)e.Argument;
+
+            WC.CountWords(worker, e);
+        }
+
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             label6.Text = "Fin: " + DateTime.Now;
@@ -42,19 +100,22 @@ namespace WindowsFormsApplication1
             this.WordsCounted.Text = state.WordsMatched.ToString();
         }
 
-        private void Start_Click(object sender, EventArgs e)
+        private void MMF_Click(object sender, EventArgs e)
         {
             label5.Text = "Debut: " + DateTime.Now;
-            StartThread();
+            
+            SearchMemoryMappedFile mmf = new SearchMemoryMappedFile();
+            mmf.SourceFile = this.SourceFile.Text;
+            mmf.CompareString = this.CompareString.Text;
+
+            if (!backgroundWorker2.IsBusy)
+            {
+                backgroundWorker2.RunWorkerAsync(mmf);
+            }
+
         }
 
-        private void Cancel_Click(object sender, EventArgs e)
-        {
-            // Cancel the asynchronous operation.
-            this.backgroundWorker1.CancelAsync();
-        }
-
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
         {
             // This event handler is where the actual work is done.
             // This method runs on the background thread.
@@ -64,40 +125,23 @@ namespace WindowsFormsApplication1
             worker = (System.ComponentModel.BackgroundWorker)sender;
 
             // Get the Words object and call the main method.
-            Words WC = (Words)e.Argument;
+            SearchMemoryMappedFile mmf = (SearchMemoryMappedFile)e.Argument;
 
-            WC.CountWords(worker, e);
+            mmf.CountWords(worker, e);
         }
 
-        private void StartThread()
+        private void backgroundWorker2_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             // This method runs on the main thread.
-            this.WordsCounted.Text = "0";
+            SearchMemoryMappedFile.CurrentState state =
+                (SearchMemoryMappedFile.CurrentState)e.UserState;
+            this.LinesCounted.Text = state.LinesCounted.ToString();
+            this.WordsCounted.Text = state.WordsMatched.ToString();
+        }
 
-            // Initialize the object that the background worker calls.
-            Words WC = new Words();
-            WC.CompareString = this.CompareString.Text;
-            WC.SourceFile = this.SourceFile.Text;
-            WC.FileSplitPart = 3;
-
-            //System.ComponentModel.BackgroundWorker worker;
-
-            //Thread newThread = new Thread(WC.CountWords);
-            //newThread.IsBackground = true;
-            //newThread.Start();
-            
-            //ThreadTest t = new ThreadTest();
-            //newThread = new Thread(t.moreThreadJob);
-
-            //newThread.Start();
-
-            // Start the asynchronous operation.
-            //WC.FilePart = 1;
-            backgroundWorker1.RunWorkerAsync(WC);
-            //WC.FilePart = 2;
-            //backgroundWorker1.RunWorkerAsync(WC);
-            //WC.FilePart = 3;
-            //backgroundWorker1.RunWorkerAsync(WC);
+        private void backgroundWorker2_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            backgroundWorker1_RunWorkerCompleted(sender, e);
         }
     }
 }
